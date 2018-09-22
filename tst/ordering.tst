@@ -1,33 +1,45 @@
 gap> START_TEST("ordering.tst");;
 
-#
-gap> PermList(List([1..30087], SMALL_GROUPS_PERM5));
-(2,30083)(3,30084)(4,30085)(5,30086)
-gap> PermList(List([1..104602], SMALL_GROUPS_PERM7));
-(2,104599)(3,104600)(4,104601)(5,104602)
-gap> PermList(List([1..721057], SMALL_GROUPS_PERM11));
-(2,721053)(3,721054)(4,721055)(5,721056)
+# First make sure we actually implement Bettina's
+# permutations
+gap> perm5  := [1];;
+gap> Append(perm5, [ 30083, 30084, 30085, 30086 ]);;
+gap> Append(perm5, [2..30082]);;
+gap> PositionsProperty([1..Length(perm5)], i -> perm5[i] <> SMALL_GROUPS_PERM5(i));
+[  ]
 
 #
-gap> TestSmallPerm := function(n, low, high)
-> local ord, res, old_low, old_high, new_low, new_high;
+gap> perm7  := [1];;
+gap> Append(perm7, [ 104599, 104600, 104601, 104602 ]);;
+gap> Append(perm7, [2..104598]);;
+gap> PositionsProperty([1..Length(perm7)], i -> perm7[i] <> SMALL_GROUPS_PERM7(i));
+[  ]
+
+#
+gap> perm11 := [1];;
+gap> Append(perm11, [ 721053, 721054, 721055, 721056 ]);;
+gap> Append(perm11, [2..721053]);;
+gap> PositionsProperty([1..Length(perm11)], i -> perm11[i] <> SMALL_GROUPS_PERM11(i));
+[  ]
+
+#
+gap> TestSmallPerm := function(n, perm, list)
+> local ord, res, old, new;
 > ord := SMALL_GROUPS_OLD_ORDER;
 > SMALL_GROUPS_OLD_ORDER := false;
-> new_low := List(low, i -> CodePcGroup(SmallGroup(n, i)));;
-> new_high := List(high, i -> CodePcGroup(SmallGroup(n, i)));;
+> new := List(list, i -> CodePcGroup(SmallGroup(n, i)));;
 > SMALL_GROUPS_OLD_ORDER := true;;
-> old_low := List(low, i -> CodePcGroup(SmallGroup(n, i)));;
-> old_high := List(high, i -> CodePcGroup(SmallGroup(n, i)));;
+> old := List(List(list, perm), i -> CodePcGroup(SmallGroup(n, i)));;
 > SMALL_GROUPS_OLD_ORDER := ord;
-> return new_low = old_high and new_high = old_low;
+> return old = new;
 > end;;
 
 #
-gap> TestSmallPerm(5^7, [2..5], [30083..30086]);
+gap> TestSmallPerm(5^7, SMALL_GROUPS_PERM5, Union([1..100],[30083..30086]));
 true
-gap> TestSmallPerm(7^7, [2..5], [104599..104602]);
+gap> TestSmallPerm(7^7, SMALL_GROUPS_PERM7, Union([1..100],[104599..104602]));
 true
-gap> TestSmallPerm(11^7, [2..5], [721053..721056]);
+gap> TestSmallPerm(11^7, SMALL_GROUPS_PERM11, Union([1..100],[721053..721056]));
 true
 
 #

@@ -14,11 +14,17 @@ DeclareInfoClass( "InfoIdgroup" );
 ##  If set to <C>true</C>, then groups of order <M>5^7</M>
 ##  <M>7^7</M>, and <M>11^7</M> are ordered in the way they were
 ##  orderd up to version 1.0 of the package. If this variable is
-##  set to <C>false</C>, which is the default as of version 1.1,
-##  then the permutations <M>(2,30083)(3,30084)(4,30085)(5,30086)</M>,
+##  set to <C>false</C>, then these groups are permuted according to
+##  the permutations <C>SMALL_GROUPS_PERM5</C>, <C>SMALL_GROUPS_PERM7</C>,
+##  and <C>SMALL_GROUPS_PERM11</C> respectively so that the ordering of these
+##  groups agrees with the one used in MAGMA.
+##  This reordering is the default as of version 1.1.
+##  <P/>
+##  Note that between version 1.1 and 1.3 of this package an incorrect
+##  reordering using the permutations <M>(2,30083)(3,30084)(4,30085)(5,30086)</M>,
 ##  <M>(2,104599)(3,104600)(4,104601)(5,104602)</M>, and
 ##  <M>(2,721053)(3,721054)(4,721055)(5,721059)</M> respectively
-##  are applied to the old ordering of groups of that order.
+##  was used.
 ##  </Description>
 ##  </ManSection>
 ##  <#/GAPDoc>
@@ -31,10 +37,11 @@ SMALL_GROUPS_OLD_ORDER := false;
 SMALL_GROUPS_PERM5 := function(i)
     if i in [2..5] then
         return 30081 + i;
-    elif i in [30083..30086] then
-        return i - 30081;
+    elif i in [6..30086] then
+        return [2..30082][i - 5];
+    else
+        return i;
     fi;
-    return i;
 end;
 #    perm7  := [1];
 #    Append(perm7, [ 104599, 104600, 104601, 104602 ]);
@@ -42,10 +49,11 @@ end;
 SMALL_GROUPS_PERM7 := function(i)
     if i in [2..5] then
         return 104597 + i;
-    elif i in [104599..104602] then
-        return i - 104597;
+    elif i in [6..104602] then
+        return [2..104598][i - 5];
+    else
+        return i;
     fi;
-    return i;
 end;
 #    perm11 := [1];
 #    Append(perm11, [ 721053, 721054, 721055, 721056 ]);
@@ -53,10 +61,11 @@ end;
 SMALL_GROUPS_PERM11 := function(i)
     if i in [2..5] then
         return 721051 + i;
-    elif i in [721053..721056] then
-        return i - 721051;
+    elif i in [6..721056] then
+        return [2..721053][i - 5];
+    else
+        return i;
     fi;
-    return i;
 end;
 
 BindGlobal("READ_SMALL_FUNCS", [ ]);
